@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080808">
+<title>PersonalAI — Spyder</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand-icon">✳</div>
+    <div class="brand"><b>PersonalAI</b><small><span></span> Spyder · карта связей</small></div>
+    <button id="menuButton" class="icon-button" aria-label="Меню">☰</button>
+  </header>
+  <main>
+      <section id="chatScreen" class="screen" hidden>
+    <div class="chat-heading">
+        <div>
+            <div class="eyebrow">YOUR PERSONAL AI</div>
+            <h1>Чат<span>.</span></h1>
+            <p>Твоё пространство для идей и мыслей.</p>
+        </div>
+        <div class="ai-status">
+            <span></span> ИИ готов
+        </div>
+    </div>
+
+    <div class="chat-model">
+        <div class="model-icon">✳</div>
+        <div>
+            <small>Текущая модель</small>
+            <b>Облачная модель</b>
+        </div>
+        <span class="model-arrow">↗</span>
+    </div>
+
+    <div class="chat-welcome">
+        <div class="welcome-icon">✳</div>
+        <h2>Привет.</h2>
+        <p>Я твой PersonalAI. Здесь со временем появятся наши диалоги, идеи и совместная работа.</p>
+        <div class="chat-suggestions">
+            <div class="suggestion">✦ <span>Обсудить идею</span></div>
+            <div class="suggestion">⌘ <span>Продолжить проект</span></div>
+            <div class="suggestion">◷ <span>Вернуться к прошлому</span></div>
+        </div>
+    </div>
+
+
+<div class="chat-composer-preview">
+    <button type="button" id="attachFileButton" class="attach-file-button" title="Прикрепить файлы">＋</button>
+
+    <input
+        type="file"
+        id="chatFileInput"
+        accept="image/*,.pdf,.txt,.doc,.docx"
+        multiple
+        hidden
+    >
+
+    <div id="chatFilePreview" class="chat-file-preview">
+        <span>Напиши что-нибудь...</span>
+    </div>
+
+    <button type="button" disabled>↑</button>
+</div>
+
+    <p class="chat-disclaimer">Предварительный просмотр · Отправка отключена</p>
+</section>
+    <section id="spyderScreen" class="screen active">
+      <div class="intro">
+        <div><div class="eyebrow">YOUR KNOWLEDGE GRAPH</div><h1>Spyder<span>.</span></h1><p>Чаты, проекты и идеи — в одной живой карте.</p></div>
+        <button id="addNodeButton" class="primary-button">＋ Добавить</button>
+      </div>
+      <div class="toolbar">
+        <label class="search"><span>⌕</span><input id="searchInput" placeholder="Найти чат или проект…" autocomplete="off"></label>
+        <button id="linkModeButton" class="tool-button">⤳ Связать</button>
+        <button id="fitButton" class="tool-button square" title="Показать всю карту">⤢</button>
+      </div>
+      <div id="linkHint" class="hint" hidden>Выбери первый узел, затем второй. Нажми «Отмена», чтобы выйти из режима.</div>
+      <div class="graph-wrap" id="graphWrap">
+        <svg id="edges" aria-label="Связи между чатами и проектами"></svg>
+        <div id="nodes" class="nodes"></div>
+        <div id="graphEmpty" class="graph-empty" hidden><b>Паутина пока пуста</b><p>Добавь первый чат или проект, чтобы начать собирать свою карту.</p><button class="primary-button" id="emptyAddButton">Создать первый узел</button></div>
+        <div class="graph-controls"><button id="zoomOut" aria-label="Уменьшить">−</button><span id="zoomLabel">100%</span><button id="zoomIn" aria-label="Увеличить">＋</button></div>
+        <div class="graph-legend"><span><i class="dot chat-dot"></i> Чат</span><span><i class="dot project-dot"></i> Проект</span><span><i class="dot idea-dot"></i> Идея</span></div>
+      </div>
+      <div class="below">
+        <div><small class="eyebrow">КАРТА СЕЙЧАС</small><b id="graphSummary">0 узлов · 0 связей</b></div>
+        <button id="manageLinksButton" class="text-button">Управлять связями ↗</button>
+      </div>
+      <div id="details" class="details" hidden></div>
+    </section>
+  </main>
+</div>
+
+<div id="backdrop" class="backdrop"></div>
+<aside id="drawer" class="drawer">
+  <div class="handle"></div><div class="drawer-heading"><div class="eyebrow">PERSONALAI</div><h2>Меню</h2></div>
+  <button class="menu-item active" data-page="spyder"><span>⌘</span><b>Spyder</b><i>›</i></button>
+<button class="menu-item" data-page="chat">
+  <span>▤</span><b>Чат</b><i>›</i>
+</button>  <button class="menu-item" data-page="projects"><span>◈</span><b>Проекты</b><i>›</i></button>
+  <button class="menu-item" data-page="themes"><span>◐</span><b>Оформление</b><i>›</i></button>
+  <div class="menu-note">Связывай узлы вручную, чтобы создавать собственную карту знаний.</div>
+</aside>
+
+<div id="nodeModal" class="modal-backdrop" hidden>
+  <form id="nodeForm" class="modal">
+    <button type="button" class="modal-close" data-close="nodeModal" aria-label="Закрыть">×</button>
+    <div class="eyebrow">НОВЫЙ ЭЛЕМЕНТ</div><h2>Добавить в Spyder</h2>
+    <label>Название<input id="nodeTitle" maxlength="70" required placeholder="Например, Telegram AI-бот"></label>
+    <label>Тип<select id="nodeType"><option value="chat">Чат</option><option value="project">Проект</option><option value="idea">Идея</option></select></label>
+    <label>Описание<textarea id="nodeDescription" rows="3" maxlength="280" placeholder="О чём этот элемент? (необязательно)"></textarea></label>
+    <button class="primary-button wide" type="submit">Добавить узел</button>
+  </form>
+</div>
+
+<div id="linksModal" class="modal-backdrop" hidden>
+  <div class="modal">
+    <button type="button" class="modal-close" data-close="linksModal" aria-label="Закрыть">×</button>
+    <div class="eyebrow">КАРТА СВЯЗЕЙ</div><h2>Связи вручную</h2>
+    <p class="modal-copy">Выбери два элемента, чтобы связать их. Связь можно удалить в списке ниже.</p>
+    <label>Первый элемент<select id="linkFrom"></select></label>
+    <label>Второй элемент<select id="linkTo"></select></label>
+    <button id="createLinkButton" class="primary-button wide" type="button">＋ Создать связь</button>
+    <div id="linksList" class="links-list"></div>
+  </div>
+</div>
+
+<div id="genericModal" class="modal-backdrop" hidden>
+  <div class="modal">
+    <button type="button" class="modal-close" data-close="genericModal" aria-label="Закрыть">×</button>
+    <div id="genericContent"></div>
+  </div>
+</div>
+</body></html>
